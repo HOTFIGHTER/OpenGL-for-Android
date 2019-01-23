@@ -3,7 +3,8 @@ package com.example.dell.openglex;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
-import com.example.dell.openglex.controller.YuGLRender;
+import com.example.dell.openglex.controller.TextureGLRender;
+import com.example.dell.openglex.controller.TriangleGLRender;
 import com.example.dell.openglex.view.YuGLSurfaceView;
 
 public class MainActivity extends AppCompatActivity {
@@ -12,7 +13,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mSurfaceView=new YuGLSurfaceView(this);
-        YuGLRender render = new YuGLRender();
+        TextureGLRender render = new TextureGLRender(this);
+        //TriangleGLRender render = new TriangleGLRender(this);
         mSurfaceView.setRenderer(render);
         setContentView(mSurfaceView);
     }

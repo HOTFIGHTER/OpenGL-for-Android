@@ -1,28 +1,35 @@
 package com.example.dell.openglex.controller;
 
+import android.content.Context;
 import android.opengl.GLSurfaceView;
-import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
+import com.example.dell.openglex.Utils.GLHelper;
 import java.nio.FloatBuffer;
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 
-public class YuGLRender implements GLSurfaceView.Renderer {
-    private FloatBuffer mTriangleBuffer;
-    private FloatBuffer mColorBuffer;
-
+/*
+* 带颜色的基础图像三角形绘制
+* */
+public class TriangleGLRender implements GLSurfaceView.Renderer {
     //三角形坐标
-    private float vertices[] = {
+    private float mVertices[] = {
             -0.5f, -0.5f, 0.0f,
             0.5f, -0.5f, 0.0f,
             0.0f,  0.5f, 0.0f
     };
-    private float[] mColor = new float[]{
+    //颜色坐标
+    private float[] mColors = new float[]{
             1, 1, 0, 1,
             0, 1, 0.5f, 1,
             1, 0, 1, 1
     };
+    private Context mContext;
+    private FloatBuffer mTriangleBuffer;
+    private FloatBuffer mColorBuffer;
 
+    public TriangleGLRender(Context context){
+        mContext=context;
+    }
     @Override
     public void onSurfaceCreated(GL10 gl10, EGLConfig eglConfig) {
         gl10.glClearColor(0, 1, 1, 1);//设置背景色
@@ -30,22 +37,8 @@ public class YuGLRender implements GLSurfaceView.Renderer {
         gl10.glEnableClientState(GL10.GL_VERTEX_ARRAY);
         gl10.glEnableClientState(GL10.GL_COLOR_ARRAY);
 
-        //先初始化buffer，数组的长度*4，因为一个float占4个字节
-        ByteBuffer bb = ByteBuffer.allocateDirect(vertices.length * 4);
-        //以本机字节顺序来修改此缓冲区的字节顺序
-        bb.order(ByteOrder.nativeOrder());
-        mTriangleBuffer = bb.asFloatBuffer();
-        //将给定float[]数据从当前位置开始，依次写入此缓冲区
-        mTriangleBuffer.put(vertices);
-        //设置此缓冲区的位置。如果标记已定义并且大于新的位置，则要丢弃该标记。
-        mTriangleBuffer.position(0);
-
-        //颜色相关
-        ByteBuffer bb2 = ByteBuffer.allocateDirect(mColor.length * 4);
-        bb2.order(ByteOrder.nativeOrder());
-        mColorBuffer = bb2.asFloatBuffer();
-        mColorBuffer.put(mColor);
-        mColorBuffer.position(0);
+        mTriangleBuffer=GLHelper.prepareBuffer(mVertices);
+        mColorBuffer=GLHelper.prepareBuffer(mColors);
     }
 
     @Override
@@ -58,6 +51,7 @@ public class YuGLRender implements GLSurfaceView.Renderer {
         gl10.glClear(GL10.GL_COLOR_BUFFER_BIT | GL10.GL_DEPTH_BUFFER_BIT);
         //矩阵单位化
         gl10.glLoadIdentity();
+        //允许画点
         gl10.glEnableClientState(GL10.GL_VERTEX_ARRAY);
         //启用顶点颜色数组
         gl10.glEnableClientState(GL10.GL_COLOR_ARRAY);
@@ -71,6 +65,7 @@ public class YuGLRender implements GLSurfaceView.Renderer {
         gl10.glDrawArrays(GL10.GL_TRIANGLES, 0, 3);
         gl10.glFinish();
 
-
+        gl10.glDisableClientState(GL10.GL_COLOR_ARRAY);
+        gl10.glDisableClientState(GL10.GL_VERTEX_ARRAY);
     }
 }
