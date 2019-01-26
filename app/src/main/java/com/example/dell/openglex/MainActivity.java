@@ -3,6 +3,7 @@ package com.example.dell.openglex;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
+import com.example.dell.openglex.controller.LightGLRender;
 import com.example.dell.openglex.controller.MatrixGLRender;
 import com.example.dell.openglex.controller.TextureGLRender;
 import com.example.dell.openglex.controller.TriangleGLRender;
@@ -16,7 +17,8 @@ public class MainActivity extends AppCompatActivity {
         mSurfaceView=new YuGLSurfaceView(this);
         //TextureGLRender render = new TextureGLRender(this);
         //TriangleGLRender render = new TriangleGLRender(this);
-        MatrixGLRender render=new MatrixGLRender(this);
+        //MatrixGLRender render=new MatrixGLRender(this);
+        LightGLRender render=new LightGLRender(this);
         mSurfaceView.setRenderer(render);
         setContentView(mSurfaceView);
     }

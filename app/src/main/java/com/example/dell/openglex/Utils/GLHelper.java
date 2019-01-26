@@ -1,8 +1,11 @@
 package com.example.dell.openglex.Utils;
+
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.opengl.GLES30;
 import android.opengl.GLUtils;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.ByteBuffer;
@@ -13,7 +16,7 @@ import javax.microedition.khronos.opengles.GL10;
 
 public class GLHelper {
     //坐标分配缓存对象
-    public static FloatBuffer prepareBuffer(float[] vertices){
+    public static FloatBuffer prepareBuffer(float[] vertices) {
         //先初始化buffer，数组的长度*4，因为一个float占4个字节
         ByteBuffer bb = ByteBuffer.allocateDirect(vertices.length * 4);
         //以本机字节顺序来修改此缓冲区的字节顺序
@@ -27,7 +30,7 @@ public class GLHelper {
     }
 
     //加载图片
-    private static Bitmap loadBitmap(Context context,String path) {
+    private static Bitmap loadBitmap(Context context, String path) {
         InputStream in = null;
         try {
             //todo IO读取过程中加入encode和decode的过程
@@ -36,7 +39,7 @@ public class GLHelper {
         } catch (final IOException e) {
             return null;
         } finally {
-            if(in != null) {
+            if (in != null) {
                 try {
                     in.close();
                 } catch (final IOException e) {
@@ -52,7 +55,7 @@ public class GLHelper {
         int[] textures = new int[1];
         try {
             // 加载位图
-            bitmap = loadBitmap(context,path);
+            bitmap = loadBitmap(context, path);
             // 指定生成N个纹理（第一个参数指定生成1个纹理），
             // textures数组将负责存储所有纹理的代号。
             gl.glGenTextures(1, textures, 0);
@@ -78,4 +81,53 @@ public class GLHelper {
             return textures[0];
         }
     }
+
+     /*
+     通过调用loadShader方法，分别加载顶点着色器与片元着色器的源代码进GPU，并分别进行编译
+     然后创建一个着色器程序，分别将相应的顶点与片元着色器添加其中
+     ，最后将两个着色器链接为一个整体着色器程序
+     */
+
+    public static int createProgram(String vertexSource, String fragmentSource) {
+        //加载顶点着色器
+        int vextexShder = loadShader(GLES30.GL_VERTEX_SHADER, vertexSource);
+        if (vextexShder == 0) {
+            return 0;
+        }
+        //加载片元着色器
+        int fragmentShader = loadShader(GLES30.GL_FRAGMENT_SHADER, fragmentSource);
+        if (fragmentShader == 0) {
+            return 0;
+        }
+        int program = GLES30.glCreateProgram();
+        if (program != 0) {
+            GLES30.glAttachShader(program, vextexShder);
+            GLES30.glAttachShader(program, fragmentShader);
+            GLES30.glLinkProgram(program);//链接程序
+            int[] linkStatus = new int[1];
+            GLES30.glGetProgramiv(program, GLES30.GL_LINK_STATUS, linkStatus, 0);
+            if (linkStatus[0] != GLES30.GL_TRUE) {
+                GLES30.glDeleteProgram(program);
+                program = 0;
+            }
+        }
+        return program;
+    }
+
+    public static int loadShader(int shaderType, String shaderSource) {
+        int shader = GLES30.glCreateShader(shaderType); //创建shader并记录它的id
+        if (shader != 0) {
+            GLES30.glShaderSource(shader, shaderSource);//加载着色器代码
+            GLES30.glCompileShader(shader);//编译
+            int[] compiled = new int[1];
+            //获取shader编译情况
+            GLES30.glGetShaderiv(shader, GLES30.GL_COMPILE_STATUS, compiled, 0);
+            if (compiled[0] == 0) { //如果编译失败
+                GLES30.glDeleteShader(shader);
+                shader = 0;
+            }
+        }
+        return shader;
+    }
+
 }

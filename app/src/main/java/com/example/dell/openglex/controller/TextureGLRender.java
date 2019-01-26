@@ -11,7 +11,7 @@ import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 
 /*
-* 带贴图的基础图形的绘制
+*  带贴图的基础图形的绘制
 * */
 public class TextureGLRender implements GLSurfaceView.Renderer {
     //三角形坐标
