@@ -1,11 +1,14 @@
-package com.example.dell.openglex.Utils;
+package com.example.dell.openglex.utils;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.opengl.GLES20;
 import android.opengl.GLES30;
 import android.opengl.GLUtils;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.ByteBuffer;
@@ -90,24 +93,24 @@ public class GLHelper {
 
     public static int createProgram(String vertexSource, String fragmentSource) {
         //加载顶点着色器
-        int vextexShder = loadShader(GLES30.GL_VERTEX_SHADER, vertexSource);
+        int vextexShder = loadShader(GLES20.GL_VERTEX_SHADER, vertexSource);
         if (vextexShder == 0) {
             return 0;
         }
         //加载片元着色器
-        int fragmentShader = loadShader(GLES30.GL_FRAGMENT_SHADER, fragmentSource);
+        int fragmentShader = loadShader(GLES20.GL_FRAGMENT_SHADER, fragmentSource);
         if (fragmentShader == 0) {
             return 0;
         }
-        int program = GLES30.glCreateProgram();
+        int program = GLES20.glCreateProgram();
         if (program != 0) {
-            GLES30.glAttachShader(program, vextexShder);
-            GLES30.glAttachShader(program, fragmentShader);
-            GLES30.glLinkProgram(program);//链接程序
+            GLES20.glAttachShader(program, vextexShder);
+            GLES20.glAttachShader(program, fragmentShader);
+            GLES20.glLinkProgram(program);//链接程序
             int[] linkStatus = new int[1];
-            GLES30.glGetProgramiv(program, GLES30.GL_LINK_STATUS, linkStatus, 0);
-            if (linkStatus[0] != GLES30.GL_TRUE) {
-                GLES30.glDeleteProgram(program);
+            GLES20.glGetProgramiv(program, GLES20.GL_LINK_STATUS, linkStatus, 0);
+            if (linkStatus[0] != GLES20.GL_TRUE) {
+                GLES20.glDeleteProgram(program);
                 program = 0;
             }
         }
@@ -121,13 +124,49 @@ public class GLHelper {
             GLES30.glCompileShader(shader);//编译
             int[] compiled = new int[1];
             //获取shader编译情况
-            GLES30.glGetShaderiv(shader, GLES30.GL_COMPILE_STATUS, compiled, 0);
+            GLES30.glGetShaderiv(shader, GLES20.GL_COMPILE_STATUS, compiled, 0);
             if (compiled[0] == 0) { //如果编译失败
                 GLES30.glDeleteShader(shader);
                 shader = 0;
             }
         }
         return shader;
+    }
+
+    /**
+     * 从assets中加载着色脚本
+     * <p>
+     * ① 打开assets目录中的文件输入流
+     * ② 创建带缓冲区的输出流
+     * ③ 逐个字节读取文件数据, 放入缓冲区
+     * ④ 将缓冲区中的数据转为字符串
+     *
+     * @param fileName  assets目录中的着色脚本文件名
+     * @param resources 应用的资源
+     * @return
+     */
+    public static String loadFromAssetsFile(String fileName, Resources resources) {
+        String result = null;
+        try {
+            //1. 打开assets目录中读取文件的输入流, 相当于创建了一个文件的字节输入流
+            InputStream is = resources.getAssets().open(fileName);
+            int ch = 0;
+            //2. 创建一个带缓冲区的输出流, 每次读取一个字节, 注意这里字节读取用的是int类型
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            //3. 逐个字节读取数据, 并将读取的数据放入缓冲器中
+            while ((ch = is.read()) != -1) {
+                baos.write(ch);
+            }
+            //4. 将缓冲区中的数据转为字节数组, 并将字节数组转换为字符串
+            byte[] buffer = baos.toByteArray();
+            baos.close();
+            is.close();
+            result = new String(buffer, "UTF-8");
+            result = result.replaceAll("\\r\\n", "\n");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return result;
     }
 
 }

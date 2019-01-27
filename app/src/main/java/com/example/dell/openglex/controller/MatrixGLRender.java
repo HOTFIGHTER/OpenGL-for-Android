@@ -3,7 +3,7 @@ package com.example.dell.openglex.controller;
 import android.content.Context;
 import android.opengl.GLSurfaceView;
 import android.opengl.Matrix;
-import com.example.dell.openglex.Utils.GLHelper;
+import com.example.dell.openglex.utils.GLHelper;
 import java.nio.FloatBuffer;
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
