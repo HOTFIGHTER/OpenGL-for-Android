@@ -31,31 +31,29 @@ public class ParticleProgram {
     public void initShader(GLSurfaceView v) {
 //        mVertexShader = GLHelper.loadFromAssetsFile("vertex.sh",
 //                v.getResources());
-        mVertexShader="uniform mat4 u_Matrix;" +
-                "uniform float u_Time;" +
-                "attribute vec3 a_Position;" +
-                "attribute vec3 a_Color;" +
-                "attribute vec3 a_DirectionVector;" +
-                "attribute float a_ParticleStartTime;" +
-                "varying vec3 v_Color;" +
-                "varying float v_ElapsedTime;" +
-                "void main()" +
-                "{" +
+        mVertexShader="uniform mat4 u_Matrix;\n" +
+                "uniform float u_Time;\n" +
+                "attribute vec3 a_Position;\n" +
+                "attribute vec3 a_Color;\n" +
+                "attribute vec3 a_DirectionVector;\n" +
+                "attribute float a_ParticleStartTime;\n" +
+                "varying vec3 v_Color;\n" +
+                "varying float v_ElapsedTime;\n" +
+                "void main(){\n" +
                 "v_Color=a_Color;" +
-                "v_ElapsedTime=u_Time-a_ParticleStartTime;" +
-                "vec3 currentPosition=a_Position+(a_DirectionVector*v_ElapsedTime);" +
-                "gl_Position=u_Matrix*vec4(currentPosition,1.0);" +
-                "gl_PointSize=10.0;" +
-                "}";
+                "v_ElapsedTime=u_Time-a_ParticleStartTime;\n" +
+                "vec3 currentPosition=a_Position+(a_DirectionVector*v_ElapsedTime);\n" +
+                "gl_Position=u_Matrix*vec4(currentPosition,1.0);\n" +
+                "gl_PointSize=10.0;\n" +
+                "}\n";
 //        mFragmentShader = GLHelper.loadFromAssetsFile("frag.sh",
 //                v.getResources());
-        mFragmentShader="precision mediump float;" +
-                "varying vec3 v_Color;" +
-                "varying float v_ElapsedTime;" +
-                "void main()" +
-                "{" +
-                "gl_FragColor=vec4(v_Color/v_ElapsedTime,1.0);" +
-                "}";
+        mFragmentShader="precision mediump float;\n" +
+                "varying vec3 v_Color;\n" +
+                "varying float v_ElapsedTime;\n" +
+                "void main(){\n" +
+                "gl_FragColor=vec4(v_Color/v_ElapsedTime,1.0);\n" +
+                "}\n";
         /*
          * 创建着色器程序, 传入顶点着色器脚本 和 片元着色器脚本 注意顺序不要错
          */

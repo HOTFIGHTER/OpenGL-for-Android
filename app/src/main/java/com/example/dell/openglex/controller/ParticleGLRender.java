@@ -36,7 +36,7 @@ public class ParticleGLRender implements GLSurfaceView.Renderer {
     @Override
     public void onSurfaceCreated(GL10 gl10, EGLConfig eglConfig) {
         //设置屏幕背景色
-        GLES20.glClearColor(0.0f,0.0f,0.0f,0.0f);
+        GLES20.glClearColor(0.0f,0.0f,1.0f,1.0f);
         mParticleProgram=new ParticleProgram(mContext,mGLView);
         //获取粒子系统的实例，初始化粒子系统包含10000个粒子
         mParticleSystem=new ParticleSystem(10000);

@@ -1,6 +1,8 @@
 package com.example.dell.openglex.object;
 import android.graphics.Color;
 import android.opengl.GLES20;
+import android.util.Log;
+
 import com.example.dell.openglex.program.ParticleProgram;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
@@ -24,8 +26,8 @@ public class ParticleSystem {
     private int mNextParticle = 0;
     private int mCurrentParticleCount;
     //使用vbo
-    private int[] mVaoID;
     private int[] mVboID = new int[1];
+    private int dataOffset = 0;
 
     public ParticleSystem(int maxParticleCount) {
         mParticles = new float[maxParticleCount * TOTAL_COMPONENT_COUNT];
@@ -65,51 +67,48 @@ public class ParticleSystem {
     }
 
     public void bindData(ParticleProgram particleProgram) {
-        int dataOffset = 0;
+        //int dataOffset = 0;
         // 将particles包含的package数组包装成FloatBuffer
-        /*vertexArrayBuffer = floatBufferUtil(particles);
-        vertexArrayBuffer.put(particles);
-        vertexArrayBuffer.position(0);*/
+//        vertexArrayBuffer = floatBufferUtil(particles);
+//        vertexArrayBuffer.put(particles);
+//        vertexArrayBuffer.position(0);
         // 创建VBO
         GLES20.glGenBuffers(1, mVboID, 0);
         // 绑定VBO
         GLES20.glBindBuffer(GLES20.GL_ARRAY_BUFFER, mVboID[0]);
         // 绑定数据,最后一个参数要改为GL_DYNAMIC_DRAW，表示数据是在变化的
-        //Log.d("cxy", "vertexArrayBuffer.capacity ( "+vertexArrayBuffer.capacity()+")");
+        Log.d("Yu", "vertexArrayBuffer.capacity ( "+mVertexArrayBuffer.capacity()+")");
         GLES20.glBufferData(GLES20.GL_ARRAY_BUFFER,
                 mVertexArrayBuffer.capacity() * BYTES_PER_FLOAT,
                 mVertexArrayBuffer, GLES20.GL_DYNAMIC_DRAW);
-
-        //启用顶点位置数据的 属性数组
-        GLES20.glEnableVertexAttribArray(particleProgram
-                .getPositionAttributeLocation());
-        GLES20.glVertexAttribPointer(
-                particleProgram.getPositionAttributeLocation(),
-                POSITION_COMPONENT_COUNT, GLES20.GL_FLOAT, false, STRIDE,
-                dataOffset);
-        dataOffset += POSITION_COMPONENT_COUNT * BYTES_PER_FLOAT;
-
-        GLES20.glEnableVertexAttribArray(particleProgram
-                .getColorAttributeLocation());
-        GLES20.glVertexAttribPointer(
-                particleProgram.getColorAttributeLocation(),
-                COLOR_COMPONENT_COUNT, GLES20.GL_FLOAT, false, STRIDE,
-                dataOffset);
-        dataOffset += COLOR_COMPONENT_COUNT * BYTES_PER_FLOAT;
-
-        GLES20.glEnableVertexAttribArray(particleProgram
-                .getDirectionVectorAttributeLocation());
-        GLES20.glVertexAttribPointer(
-                particleProgram.getDirectionVectorAttributeLocation(),
-                VECTOR_COMPONENT_COUNT, GLES20.GL_FLOAT, false, STRIDE,
-                dataOffset);
-        dataOffset += VECTOR_COMPONENT_COUNT * BYTES_PER_FLOAT;
-        GLES20.glEnableVertexAttribArray(particleProgram
-                .getParticleStartTimeAttributeLocation());
-        GLES20.glVertexAttribPointer(
-                particleProgram.getParticleStartTimeAttributeLocation(),
-                PARTICLE_START_TIME_COMPONENT_COUNT, GLES20.GL_FLOAT, false,
-                STRIDE, dataOffset);
+            //启用顶点位置数据的 属性数组
+            Log.v("Yu", "PositionAttributeLocation:" + particleProgram.getPositionAttributeLocation());
+            GLES20.glEnableVertexAttribArray(particleProgram
+                    .getPositionAttributeLocation());
+            GLES20.glVertexAttribPointer(particleProgram.getPositionAttributeLocation(),
+                    POSITION_COMPONENT_COUNT, GLES20.GL_FLOAT, false, STRIDE,
+                    dataOffset);
+            dataOffset += POSITION_COMPONENT_COUNT * BYTES_PER_FLOAT;
+            GLES20.glEnableVertexAttribArray(particleProgram
+                    .getColorAttributeLocation());
+            GLES20.glVertexAttribPointer(
+                    particleProgram.getColorAttributeLocation(),
+                    COLOR_COMPONENT_COUNT, GLES20.GL_FLOAT, false, STRIDE,
+                    dataOffset);
+            dataOffset += COLOR_COMPONENT_COUNT * BYTES_PER_FLOAT;
+            GLES20.glEnableVertexAttribArray(particleProgram
+                    .getDirectionVectorAttributeLocation());
+            GLES20.glVertexAttribPointer(
+                    particleProgram.getDirectionVectorAttributeLocation(),
+                    VECTOR_COMPONENT_COUNT, GLES20.GL_FLOAT, false, STRIDE,
+                    dataOffset);
+            dataOffset += VECTOR_COMPONENT_COUNT * BYTES_PER_FLOAT;
+            GLES20.glEnableVertexAttribArray(particleProgram
+                    .getParticleStartTimeAttributeLocation());
+            GLES20.glVertexAttribPointer(
+                    particleProgram.getParticleStartTimeAttributeLocation(),
+                    PARTICLE_START_TIME_COMPONENT_COUNT, GLES20.GL_FLOAT, false,
+                    STRIDE, dataOffset);
         // 这里很重要，处理完后，需要解除数据绑定
         GLES20.glBindBuffer(GLES20.GL_ARRAY_BUFFER, 0);
     }

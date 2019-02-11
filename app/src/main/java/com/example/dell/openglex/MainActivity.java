@@ -9,6 +9,7 @@ import com.example.dell.openglex.controller.MatrixGLRender;
 import com.example.dell.openglex.controller.ParticleGLRender;
 import com.example.dell.openglex.controller.TextureGLRender;
 import com.example.dell.openglex.controller.TriangleGLRender;
+import com.example.dell.openglex.controller.TunnelEffectRender;
 import com.example.dell.openglex.view.YuGLSurfaceView;
 
 public class MainActivity extends AppCompatActivity {
@@ -21,9 +22,10 @@ public class MainActivity extends AppCompatActivity {
         //TriangleGLRender render = new TriangleGLRender(this);
         //MatrixGLRender render=new MatrixGLRender(this);
         //LightGLRender render=new LightGLRender(this);
-        ParticleGLRender render=new ParticleGLRender(this,mSurfaceView);
+        //ParticleGLRender render=new ParticleGLRender(this,mSurfaceView);
+        TunnelEffectRender render=new TunnelEffectRender(this);
         mSurfaceView.setRenderer(render);
-        mSurfaceView.setRenderMode(GLSurfaceView.RENDERMODE_CONTINUOUSLY);
+        //mSurfaceView.setRenderMode(GLSurfaceView.RENDERMODE_CONTINUOUSLY);
         setContentView(mSurfaceView);
     }
 }
