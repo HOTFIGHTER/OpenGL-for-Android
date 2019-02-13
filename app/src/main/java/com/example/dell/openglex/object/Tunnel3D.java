@@ -1,7 +1,6 @@
 package com.example.dell.openglex.object;
 
 import android.util.Log;
-
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
@@ -12,7 +11,7 @@ import javax.microedition.khronos.opengles.GL10;
 public class Tunnel3D {
     private float vertics[];
     private short faces[];
-    private float colors[];
+    private byte colors[];
     private float texture[];
     private ByteBuffer vertices_direct;
     private FloatBuffer vertices_buffer;
@@ -21,7 +20,7 @@ public class Tunnel3D {
     private ShortBuffer faces_buffer;
 
     private ByteBuffer colors_direct;
-    private FloatBuffer colors_buffer;
+    private ByteBuffer colors_buffer;
 
     private ByteBuffer texture_direct;
     private FloatBuffer texture_buffer;
@@ -36,7 +35,7 @@ public class Tunnel3D {
         nx = revolution;
         ny = depth;
         nv = nx * ny;
-        colors = new float[nv * 3];
+        colors = new byte[nv * 3];
         vertics = new float[nv * 3];
         faces = new short[((nx + 1) * (ny - 1)) << 1];
         texture = new float[nv * 2];
@@ -54,24 +53,28 @@ public class Tunnel3D {
         fillTexture();
     }
 
+    //填充贴图
     private void fillTexture() {
         texture_buffer.clear();
         texture_buffer.put(texture);
         texture_buffer.position(0);
     }
 
+    //填充颜色
     private void fillColors() {
         colors_buffer.clear();
         colors_buffer.put(colors);
         colors_buffer.position(0);
     }
 
+    //填充面
     private void fillFaces() {
         faces_buffer.clear();
         faces_buffer.put(faces);
         faces_buffer.position(0);
     }
 
+    //填充vertex
     private void fillVertex() {
         vertices_buffer.clear();
         vertices_buffer.put(vertics);
@@ -87,15 +90,16 @@ public class Tunnel3D {
         faces_direct.order(ByteOrder.nativeOrder());
         faces_buffer = faces_direct.asShortBuffer();
 
-        colors_direct = ByteBuffer.allocateDirect(colors.length * (Float.SIZE >> 3));
-        colors_direct.order(ByteOrder.nativeOrder());
-        colors_buffer = colors_direct.asFloatBuffer();
+//        colors_direct = ByteBuffer.allocateDirect(colors.length * (Float.SIZE >> 3));
+//        colors_direct.order(ByteOrder.nativeOrder());
+//        colors_buffer = colors_direct.asFloatBuffer();
+        colors_buffer = ByteBuffer.allocateDirect(colors.length);
 
         texture_direct = ByteBuffer.allocateDirect(texture.length * (Float.SIZE >> 3));
         texture_direct.order(ByteOrder.nativeOrder());
         texture_buffer = texture_direct.asFloatBuffer();
     }
-
+    //产生面坐标
     private void genFaces() {
         int i = 0;
         int dy = 0;
@@ -111,19 +115,22 @@ public class Tunnel3D {
             dy += nx;
         }
     }
-
+    //产生顶点坐标
     private void genVertex() {
         int i = 0;
         double delta_x = 360.0 / (double) nx;
         double delta_y = 1.0;
         for (int y = 0; y < ny; y++) {
             for (int x = 0; x < nx; x++) {
+                //sin度的计算值
                 vertics[i + 0] = (float) Math.sin(Math.toRadians((double) x * delta_x));
                 vertics[i + 1] = (float) Math.cos(Math.toRadians((double) x * delta_x));
+                //todo
                 vertics[i + 2] = (float) (-y * delta_y);
                 i += 3;
             }
         }
+        Log.v("Yu","vertics:"+vertics);
     }
 
     private void genColors() {
@@ -162,21 +169,24 @@ public class Tunnel3D {
 
     //渲染隧道
     public void render(GL10 gl, float depth) {
-        gl.glTranslatef(-px, -py, depth);
+        //gl.glTranslatef(-px, -py, depth);
+        //顶点，有 x、y、z值，所以是 3
         gl.glVertexPointer(3, GL10.GL_FLOAT, 0, vertices_buffer);
+        //贴图顶点有两个u和v
         gl.glTexCoordPointer(2, GL10.GL_FLOAT, 0, texture_buffer);
+        //颜色有3个值r,g,b
         gl.glColorPointer(3, GL10.GL_UNSIGNED_BYTE, 0, colors_buffer);
-        //根据顶点数据绘制平面图形
-        gl.glDrawArrays(GL10.GL_TRIANGLES, 0, 3);
-        int dy = 0;
-        int nf = (nx + 1) << 1;
-        faces_buffer.position(0);
-        for (int y = 0; y < (ny - 1); y++) {
-            Log.v("Yu","标记："+y);
-            gl.glDrawElements(GL10.GL_TRIANGLE_STRIP, nf, GL10.GL_UNSIGNED_BYTE, faces_buffer);
-            dy += nf;
-            faces_buffer.position(dy);
-        }
+//        int dy = 0;
+//        int nf = (nx + 1) << 1;
+//        faces_buffer.position(0);
+//        for (int y = 0; y < (ny - 1); y++) {
+//            //Log.v("Yu","标记："+y);
+//            gl.glDrawElements(GL10.GL_TRIANGLE_STRIP, nf, GL10.GL_UNSIGNED_BYTE, faces_buffer);
+//            dy += nf;
+//            faces_buffer.position(dy);
+//        }
+        //绘制三角形带
+        gl.glDrawArrays(GL10.GL_TRIANGLES, 0, vertics.length);
     }
 
     public void nextFrame() {
@@ -193,8 +203,8 @@ public class Tunnel3D {
                 py = sy;
             }
             for (int x = 0; x < nx; x++) {
-                vertics[i + 0] = sx + (float) Math.sin(Math.toRadians(x * delta_x));
-                vertics[i + 1] = sy + (float) Math.cos(Math.toRadians(x * delta_x));
+                vertics[i + 0] = sx + (float) Math.sin(Math.toRadians((double) x * delta_x));
+                vertics[i + 1] = sy + (float) Math.cos(Math.toRadians((double)x * delta_x));
                 vertics[i + 2] = (float) (-y * delta_y);
                 i += 3;
             }

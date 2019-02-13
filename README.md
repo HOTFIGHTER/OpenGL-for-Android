@@ -12,3 +12,6 @@
 <br>增加光源（LightGLRender）<br/>
 <br>2019/01/27<br/>
 <br>增加粒子效果<br/>
+<br>2019/02/13<br/>
+<br>增加三角形隧道特效<br/>
+<br>![Image1](doc/tunnel3d.gif)<br/>
