@@ -33,7 +33,7 @@ public class GLHelper {
     }
 
     //加载图片
-    private static Bitmap loadBitmap(Context context, String path) {
+    public static Bitmap loadBitmap(Context context, String path) {
         InputStream in = null;
         try {
             //todo IO读取过程中加入encode和decode的过程

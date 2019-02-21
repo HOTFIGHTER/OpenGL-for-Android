@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">OpenGLEX</string>
+    <string name="click_info">点击成功</string>
 </resources>
