@@ -132,7 +132,7 @@ public class CarouselGLRender implements GLSurfaceView.Renderer {
                 //重新初始化
                 initReducedHeight();
                 //如果只需要一次轮播，设置mIsNeedCarousel为false
-                mIsNeedCarousel=false;
+                //mIsNeedCarousel=false;
             }
             //设置坐标
             sPos1[5] = mPos1ReducedHeight;
