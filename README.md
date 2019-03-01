@@ -1,22 +1,4 @@
-# OpenGL-for-Android
-<br>android设备下openGL编程练习<br/>
-<br>说明<br/>
-<br>本项目旨在练习Android设备下的OpenGLES2.0从零开始的Demo程序，会不定期更新，期待大家<br/>
-<br>的意见<br/>
-<br>更新说明<br/>
-<br>2019/01/23<br/>
-<br>带颜色的基础三角形绘制（TriangleGLRender）<br/>
-<br>带贴图的基础三角形绘制（TextureGLRender）<br/>
-<br>2019/01/26<br/>
-<br>增加矩阵变化和投影功能（MatrixGLRender）<br/>
-<br>增加光源（LightGLRender）<br/>
-<br>2019/01/27<br/>
-<br>增加粒子效果<br/>
-<br>2019/02/13<br/>
-<br>增加三角形隧道特效<br/>
-<br>![Image1](doc/tunnel3d.gif)<br/>
-# OpenGL-for-Android
-android设备下openGL编程练习
+OpenGL-for-Androidandroid设备下openGL编程练习
 说明
 本项目旨在练习Android设备下的OpenGLES2.0从零开始的Demo程序，会不定期更新，期待大家的意见
 更新说明
@@ -30,10 +12,10 @@ android设备下openGL编程练习
 增加粒子效果
 2019/02/13
 增加三角形隧道特效（TunnelEffectRender）
-![16638975e3e417bfd5cfe6cb1964d57c.gif](en-resource://database/472:0)
+![Image1](doc/tunnel3d.gif)
 2019/02/28
 增加轮播图效果（CarouselGLRender）
-![2407e5a3044668975e62e380dcc5ca7e.gif](en-resource://database/474:0)
+![Image1](doc/lunbo.gif)
 2019/03/01
 增加特殊图形绘制（ShapeGLRender）
-![d7893382508d5f0f572d4b12b60c1767.png](en-resource://database/480:0)
+![Image1](doc/sphere.png)
