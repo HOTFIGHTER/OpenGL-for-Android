@@ -18,4 +18,4 @@ OpenGL-for-Androidandroid设备下openGL编程练习
 ![Image1](doc/lunbo.gif)  
 2019/03/01  
 增加特殊图形绘制（ShapeGLRender）  
-![Image1](doc/sphere.png)  
+![Image1](doc/sphere.png)  ![Image1](doc/circle.png)  ![Image1](doc/rotateCircle.gif)

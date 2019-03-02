@@ -4,6 +4,7 @@ import android.content.Context;
 import android.opengl.GLSurfaceView;
 import android.opengl.GLU;
 
+import com.example.dell.openglex.object.Circle;
 import com.example.dell.openglex.object.Sphere;
 
 import java.nio.ByteBuffer;
@@ -16,6 +17,7 @@ import javax.microedition.khronos.opengles.GL10;
 public class ShapeGLRender implements GLSurfaceView.Renderer{
     private Context mContext;
     private Sphere mSphere = new Sphere();
+    private Circle mCircle=new Circle();
     // 环境光
     private final float[] mat_ambient = { 0.2f, 0.3f, 0.4f, 1.0f };
     private FloatBuffer mat_ambient_buf;
@@ -106,8 +108,9 @@ public class ShapeGLRender implements GLSurfaceView.Renderer{
         mat_posiBuf.put(light_position);
         mat_posiBuf.position(0);
         gl.glLightfv(GL10.GL_LIGHT0, GL10.GL_POSITION, mat_posiBuf);
-        gl.glRotatef(45,0,1,1);
+        gl.glRotatef(45,0,1,0);
         //绘制球状物
-        mSphere.draw(gl);
+        //mSphere.draw(gl);
+        mCircle.draw(gl);
     }
 }
